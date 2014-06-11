@@ -1,0 +1,94 @@
+name: blpapi
+version: 0.1.0.0
+cabal-version: >=1.10
+build-type: Simple
+license: MIT
+license-file: LICENSE
+maintainer: agupta182@bloomberg.net
+homepage: https://github.com/bloomberg/blpapi-hs
+synopsis: Bloomberg API bindings for Haskell
+category: Finance
+author: Akshat Gupta
+data-dir: ""
+extra-source-files: src/Finance/Blpapi/Impl/blpapi_internal_wrapper.h
+		    examples/AuthorizationHelper.hs
+                    examples/RefdataExample.hs
+                    examples/SimpleSubscriptionExample.hs
+
+flag buildexamples
+    Description:  Build example executables.
+    Default: False
+
+library
+    default-language: Haskell2010
+    build-depends: base >=4.5, time >= 1.4 && < 1.5,
+                   MonadCatchIO-mtl >=0.3, mtl >=2.0,
+                   containers >=0.4 && <0.5, stm >=2.3,
+                   text >= 0.11.1.0, bytestring >= 0.9.2.1
+
+    exposed-modules: Finance.Blpapi.ElementFormatter
+                     Finance.Blpapi.Event Finance.Blpapi.Service Finance.Blpapi.Session
+                     Finance.Blpapi.SessionOptions Finance.Blpapi.Subscription Finance.Blpapi.Types
+                     Finance.Blpapi.ElementParser Finance.Blpapi.PrettyPrint
+    ghc-options: -threaded
+    exposed: True
+    buildable: True
+    c-sources: src/Finance/Blpapi/Impl/blpapi_internal_wrapper.c
+    default-language: Haskell2010
+    other-extensions: ForeignFunctionInterface
+                      GeneralizedNewtypeDeriving ScopedTypeVariables
+    if arch(i386)
+      extra-libraries: blpapi3_32
+    else
+      extra-libraries: blpapi3_64
+    includes: blpapi_abstractsession.h blpapi_call.h blpapi_constant.h
+              blpapi_correlationid.h blpapi_datetime.h blpapi_defs.h
+              blpapi_dispatchtbl.h blpapi_element.h
+              blpapi_error.h blpapi_eventdispatcher.h blpapi_eventformatter.h
+              blpapi_event.h blpapi_exception.h blpapi_identity.h
+              blpapi_logging.h blpapi_message.h blpapi_name.h
+              blpapi_providersession.h blpapi_request.h blpapi_resolutionlist.h
+              blpapi_schema.h blpapi_service.h blpapi_session.h
+              blpapi_sessionoptions.h blpapi_streamproxy.h
+              blpapi_subscriptionlist.h blpapi_topic.h blpapi_topiclist.h
+              blpapi_types.h blpapi_versioninfo.h
+    hs-source-dirs: src
+    other-modules: Finance.Blpapi.Impl.ErrorImpl Finance.Blpapi.Impl.RequestImpl
+                   Finance.Blpapi.Impl.CorrelationIdImpl Finance.Blpapi.Impl.DatetimeImpl
+                   Finance.Blpapi.Impl.ElementImpl Finance.Blpapi.Impl.EventImpl
+                   Finance.Blpapi.Impl.IdentityImpl Finance.Blpapi.Impl.MessageImpl
+                   Finance.Blpapi.Impl.NameImpl Finance.Blpapi.Impl.SchemaImpl Finance.Blpapi.Impl.ServiceImpl
+                   Finance.Blpapi.Impl.SessionImpl Finance.Blpapi.Impl.SessionOptionsImpl
+                   Finance.Blpapi.Impl.SubscriptionListImpl Finance.Blpapi.Impl.TypesImpl
+                   Finance.Blpapi.Identity Finance.Blpapi.CorrelationId Finance.Blpapi.Request
+
+executable RefdataExample
+    if flag(buildexamples)
+        build-depends: base >=4 && <5, mtl >=2.0, blpapi -any,
+                   text >= 0.11.1.0, bytestring >= 0.9.2.1,
+                   optparse-applicative >= 0.8
+        buildable: True
+        cpp-options: -DCABAL
+        ghc-options: -threaded -with-rtsopts=-N
+    else
+        buildable: False
+    default-language: Haskell2010
+    main-is: RefdataExample.hs
+    buildable: True
+    hs-source-dirs: examples
+
+executable SimpleSubscriptionExample
+    if flag(buildexamples)
+        build-depends: base >=4 && <5, mtl >=2.0, blpapi -any,
+                   text >= 0.11.1.0, bytestring >= 0.9.2.1,
+                   optparse-applicative >= 0.8
+        buildable: True
+        cpp-options: -DCABAL
+        ghc-options: -threaded -with-rtsopts=-N
+    else
+        buildable: False
+    main-is: SimpleSubscriptionExample.hs
+    default-language: Haskell2010
+    buildable: True
+    hs-source-dirs: examples
+
