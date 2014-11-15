@@ -50,6 +50,7 @@ module Finance.Blpapi.ElementFormatter (
 import           Finance.Blpapi.Impl.ElementImpl
 import           Finance.Blpapi.Session
 
+import           Control.Applicative
 import           Control.Monad.State.Strict
 import           Finance.Blpapi.Impl.ErrorImpl
 
@@ -59,7 +60,7 @@ import           Finance.Blpapi.Request
 import qualified Finance.Blpapi.Types            as T
 
 import qualified Data.Text                       as Text
-import           Foreign                         hiding (unsafePerformIO)
+import           Foreign
 import           Foreign.C.String
 import           Foreign.C.Types
 
@@ -78,6 +79,14 @@ newtype ElementFormatter a = ElementFormatter {
 newtype ElementWritable = ElementWritable {
     getElementImpl :: Ptr ElementImpl
 }
+
+instance Functor ElementFormatter where
+    fmap = liftM
+
+instance Applicative ElementFormatter where
+    pure = formatterReturn
+    (<*>) = ap
+    
 
 -- | The monad instance
 instance Monad ElementFormatter where

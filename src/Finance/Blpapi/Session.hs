@@ -123,6 +123,7 @@ import           Finance.Blpapi.SessionOptions
 import           Finance.Blpapi.Subscription
 
 import           Control.Concurrent
+import           Control.Applicative
 import           Control.Monad
 import           Control.Monad.RWS.Strict
 import           Control.Monad.State.Strict
@@ -176,6 +177,13 @@ data BlpapiState = BlpapiState {
       _blpapiCorrelationHandlerMap :: TVar CidHandlerMap,
       _blpapiServiceMap            :: ServiceMap
 }
+
+instance Functor Blpapi where
+    fmap = liftM
+
+instance Applicative Blpapi where
+    pure = blpapiReturn
+    (<*>) = ap
 
 instance Monad Blpapi where
     (>>=) = blpapiBind
