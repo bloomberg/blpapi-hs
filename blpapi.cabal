@@ -22,7 +22,7 @@ flag buildexamples
 library
     default-language: Haskell2010
     build-depends: base >=4.5, time >= 1.4 && < 1.5,
-                   MonadCatchIO-mtl >=0.3, mtl >=2.0,
+                   mtl >=2.0,
                    containers >=0.4 && <0.5, stm >=2.3,
                    text >= 0.11.1.0, bytestring >= 0.9.2.1
 
@@ -51,7 +51,7 @@ library
               blpapi_schema.h blpapi_service.h blpapi_session.h
               blpapi_sessionoptions.h blpapi_streamproxy.h
               blpapi_subscriptionlist.h blpapi_topic.h blpapi_topiclist.h
-              blpapi_types.h blpapi_versioninfo.h
+              blpapi_types.h 
     hs-source-dirs: src
     other-modules: Finance.Blpapi.Impl.ErrorImpl Finance.Blpapi.Impl.RequestImpl
                    Finance.Blpapi.Impl.CorrelationIdImpl Finance.Blpapi.Impl.DatetimeImpl
