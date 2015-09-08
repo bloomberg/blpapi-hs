@@ -1,0 +1,7 @@
+flags:
+  blpapi:
+    buildexamples: false
+packages:
+- '.'
+extra-deps: []
+resolver: lts-2.22
